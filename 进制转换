@@ -1,0 +1,54 @@
+#include<stdio.h>  
+#include<stdlib.h>  
+#define N 100   
+typedef struct//栈的结构定义   
+ {    
+     int elem[N];  
+     int top;//栈顶   
+ }Stack;   
+ typedef struct //循环队列的结构定义  
+ {    
+    int elem[N];  
+    int front;   
+    int rear;  
+ }Queue;   
+ int Exchange(Stack *);  
+ void main()  
+ {     
+    int result;  
+    Stack s;  
+    s.top=0;//栈顶指向当前栈顶的下一位置    
+    Queue q;  
+    q.front=q.rear=0;  
+                
+        Exchange(&s);     
+        getchar();      
+        printf("\n退出程序(Y/N):");    
+        //exit=getchar();  
+        getchar();   
+ }   
+ int Exchange(Stack *s)  
+ {    
+     int r,a,b,n,i;//r是十进制数，a是需要转换的进制数，b是余数，n是栈的长度  
+     s->top=0;   
+     printf("请输入需要操作十进制数:\n");  
+     scanf("%d",&r);  
+     printf("需要将该数转换为多少进制的数？\n");   
+     scanf("%d",&a);  
+     while(r!=0)   
+     {   
+         b=r%a;  
+         r=r/a;  
+         s->elem[s->top++]=b;  
+     }    
+     n=s->top-0;  
+     printf("栈中元素依次出栈：");  
+     for(i=0;i<n;i++)   
+     {   
+         b=s->elem[--s->top];  
+         //先将栈顶指针下移一位，然后取出元素值赋值给e    
+         printf("%x",b);  
+ }    
+     printf("\n");     
+     return 0;  
+ }  
