@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define ERROR 0
+#define MAXSIZE 10
+#define OK 1
+typedef int ElemType;
+typedef struct SqList
+{
+	ElemType *elem;
+	int list;
+}SqList;
+int InitList(SqList *L)
+{
+	L->elem=(ElemType *)malloc(sizeof(ElemType));
+	if(!L->elem)
+		exit(ERROR);
+	L->list=MAXSIZE;
+	return OK;
+}
+
+ElemType GetElem(SqList L,int i)
+{
+	int temp;
+	if(i<1||i>L.list)  return ERROR;
+	temp=L.elem[i-1];
+	return temp;
+}
+int LocateElem(SqList L,ElemType e)
+{
+	int i;
+	for(i=0;i<L.list;i++)
+		if(L.elem[i]==e)
+			return i+1;
+		return 0;
+}
+int ListInsert(SqList *L,int i,ElemType e)
+{
+	int j;
+	if((i<1)||(i>L->list+1))
+		return ERROR;
+	if(L->list==MAXSIZE)
+		return ERROR;
+	for(j=L->list-1;j>=i-1;j--)
+		L->elem[j+1]=L->elem[j];
+	L->elem[i-1]=e;
+	++L->list;
+	return OK;
+}
+int ListDelete(SqList *L,int i)
+{
+	int j;
+	if((i<1)||(i>L->list+1))
+		return ERROR;
+	for(j=i;j<=L->list-1;j++)
+		L->elem[j-1]=L->elem[j];
+	--L->list;
+	return OK;
+}
+void frint(SqList L)
+{
+	int j;
+	printf("顺序表L:");
+	for(j=1;j<=L.list;j++)
+		printf("%d\t",L.elem[j-1]);
+	printf("\n");
+}
+int main()
+{
+	int a;
+    int j;
+    int locate;
+    SqList *L;
+    L->list=0;
+    for(j=1;j<10;j++)
+    {
+      printf("please input number:");
+      scanf("%d",&a);
+      ListInsert(L,a,j);
+	}
+    frint(*L);
+      locate=LocateElem(*L,3);
+    ListDelete(L,locate);
+     frint(*L);
+	system("pause");
+	return 0;
+}
