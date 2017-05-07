@@ -1,0 +1,188 @@
+#include <stdio.h>  
+#include <stdlib.h>  
+#include <algorithm>  
+#define LIST_INIT_SIZE 100  
+#define LISTINCREMENT 5  
+#define overflow -1  
+#define error -2  
+#define ok 1  
+using namespace std;  
+  
+typedef int Status;  
+typedef int Elemtype;  
+typedef struct {  
+    Elemtype *elem;  
+    int length;  
+    int listsize;  
+}Sqlist;  
+  
+//函数声明  
+//初始化线性表   
+Status initlist(Sqlist &L);  
+//在线性表L中第i个位置之前插入新元素e   
+Status listinsert(Sqlist &L,int i,Elemtype e);  
+//在线性表L中删除第i个位置的元素，并赋值给变量e   
+Status listindele(Sqlist &L,int i,Elemtype &e);  
+//打印线性表L数据   
+Status listinprint(Sqlist L);  
+//用e返回L中第i个数据元素的值   
+void GetElem(Sqlist L, int i, Elemtype &e);  
+//将两个非降序线性表合并到lc中   
+void MergeList(Sqlist &la, Sqlist &lb, Sqlist &lc);  
+  
+int main()  
+{  
+    Sqlist la,lb,lc;  
+    int i,lena,lenb,ga,gb;  
+    int ins,del,pos;            //ins：插入元素  del：删除元素  pos:位置  
+    char s[5];                  //s[5]：判断是否重新建表   
+      
+    while(1){  
+          
+        initlist(la);  
+        initlist(lb);     
+        initlist(lc);   
+  
+        //建表   
+        printf("请输入顺序表la长度:");  
+        scanf("%d",&la.length);  
+        printf("请输入顺序表la:");  
+        for(i=0;i<la.length;i++)  
+        {  
+            scanf("%d",&la.elem[i]);  
+        }  
+          
+        printf("请输入顺序表lb长度:");  
+        scanf("%d",&lb.length);  
+        printf("请输入顺序表lb:");  
+        for(i=0;i<lb.length;i++)  
+        {  
+            scanf("%d",&lb.elem[i]);  
+        }  
+        printf("\n");  
+          
+        //插入测试   
+        printf("请输入在la表中要插入的位置和元素：");  
+        scanf("%d%d",&pos,&ins);  
+        if(listinsert(la,pos,ins)!=ok)  
+        {  
+            printf("插入元素失败!当前顺序表la：");  
+            listinprint(la);  
+        }  
+        else  
+        {   
+            printf("插入成功！当前顺序表la：");  
+            listinprint(la);  
+        }  
+          
+        //删除测试   
+        printf("请输入在la表中要删除的位置:");  
+        scanf("%d",&pos);  
+        if(listindele(la,pos,del)==error)  
+        {  
+            printf("删除元素失败!当前顺序表la：");  
+            listinprint(la);  
+        }  
+        else  
+        {   
+            printf("删除成功！元素“%d”已被删除。当前顺序表la：",del);  
+            listinprint(la);  
+        }  
+          
+        //合并测试  
+        printf("合并表la和lb\n");  
+        MergeList(la,lb,lc);  
+        printf("合并成功！当前顺序表lc：");  
+        listinprint(lc);  
+          
+        getchar();   
+        printf("是否重新建立顺序表:yes ir no:");  
+        scanf("%s",s);  
+        if(s[0]!='y')  
+            break;   
+        else  
+            printf("\n");  
+    }  
+    return 0;  
+}  
+  
+Status initlist(Sqlist &L){  
+    L.elem = (Elemtype *)malloc(LIST_INIT_SIZE*sizeof(Elemtype));  
+    if(!L.elem) exit(overflow);  
+    L.length = 0;  
+    L.listsize = LIST_INIT_SIZE;  
+    return ok;  
+}  
+  
+Status listinsert(Sqlist &L,int i,Elemtype e){  
+    int *newbase,*q,*p;  
+    if(i < 1 || i > L.length + 1) return error;  
+    if(L.length == L.listsize){  
+        newbase = (Elemtype *)realloc(L.elem,(L.listsize + LISTINCREMENT) * sizeof(Elemtype));  
+        if(!newbase) exit(overflow);  
+        L.elem = newbase;  
+        L.listsize += LISTINCREMENT;  
+    }  
+    q = &(L.elem[i - 1]);  
+    for(p = & (L.elem[L.length - 1]);p >= q; --p) *(p+1) = *p;  
+    * q = e;  
+    ++ L.length;  
+    return ok;  
+}  
+  
+Status listindele(Sqlist &L,int i,Elemtype &e){  
+    int *p,*q;  
+    if(i < 1 || i > L.length ) return error;  
+    p = &(L.elem[i-1]);  
+    e = *p;  
+    q = L.elem + L.length - 1;  
+    for(++p; p <= q ; ++p) *(p-1) = *p;  
+    --L.length;  
+    return ok;  
+}  
+  
+Status listinprint(Sqlist L){  
+    int *p,*q;  
+    if(L.length == 0) return error;  
+    else  
+    {  
+        q = L.elem + L.length - 1;  
+        for(p = L.elem; p<=q ; ++p)  
+        printf("%d ",*p);   
+    }  
+    printf("\n\n");  
+    return ok;  
+}  
+  
+void GetElem(Sqlist L, int i, Elemtype &e){  
+    int *p;  
+    p = &(L.elem[i-1]);  
+    e = *p;  
+}  
+void MergeList(Sqlist &la, Sqlist &lb, Sqlist &lc){  
+    sort(la.elem,la.elem + la.length);                  //直接调用库函数进行排序   
+    sort(lb.elem,lb.elem + lb.length);  
+    int i,j,k,lena,lenb,ai,bj;  
+    i = j = 1;  
+    k = 0;  
+    while((i<=la.length)&&(j<=lb.length)){  
+        GetElem(la,i,ai);  
+        GetElem(lb,j,bj);  
+        if(ai<=bj) {  
+            listinsert(lc,++k,ai);  
+            ++i;  
+        }  
+        else{  
+            listinsert(lc,++k,bj);  
+            ++j;  
+        }  
+    }  
+    while(i <= la.length){  
+        GetElem(la,i++,ai);  
+        listinsert(lc,++k,ai);  
+    }  
+    while(j <= lb.length){  
+        GetElem(lb,j++,bj);  
+        listinsert(lc,++k,bj);  
+    }  
+}  
