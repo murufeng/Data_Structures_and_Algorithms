@@ -1,0 +1,78 @@
+#include<stdio.h>
+#include <iostream.h>
+#define MAXSIZE 100
+#define ERROR 0
+#define OK 1
+typedef char Elem;
+typedef struct 
+{
+	Elem *base;
+	int front;
+	int rear;
+}SqQue;
+int  InitQue(SqQue &Q)
+{
+	Q.base=new Elem[MAXSIZE];
+	if(!Q.base)
+		return ERROR;
+	Q.front=Q.rear=0;
+	return OK;
+}
+int QueLength(SqQue Q)
+{
+	return (Q.rear-Q.front+MAXSIZE)%MAXSIZE;
+}
+int EnQue(SqQue &Q,Elem e)
+{
+	if((Q.rear+1)%MAXSIZE==Q.front) return ERROR;
+	Q.base[Q.rear]=e;
+	Q.rear=(Q.rear+1)%MAXSIZE;
+	return ;
+}
+int OutQue(SqQue &Q,Elem &e)
+{
+	if(Q.front==Q.rear)
+	     return ERROR;
+	e=Q.base[Q.front];
+	Q.front=(Q.front+1)%MAXSIZE;
+	return OK;
+}
+int  GetHead(SqQue Q,Elem e)
+{
+	if(Q.front!=Q.rear)
+		e=Q.base[Q.front];
+	return e;
+}
+void main()
+{
+  int f,x;
+  char r;
+  SqQue S;
+  while (1)
+  {
+	printf("1-------inti\n");
+	printf("2-------Length\n");
+	printf("3-------EnQue\n");
+	printf("4-------delete\n");
+	printf("5-------GetHead\n");
+	printf("please input x=");
+	scanf("%d",&x);
+	printf("\n");
+	switch (x)
+	 {
+	  case 1:InitQue(S);
+		  break;
+	  case 2:QueLength(S);
+		  break;
+	  case 3:scanf("%d",&f);
+		  cout<<EnQue(S,f)<<endl;
+		  break;
+	  case 4:cin>>r;
+		  OutQue(S,r);
+		  break;
+	  case 5:scanf("%d",&x);
+		  cout<< GetHead(S,x)<<endl;
+		  break;
+	  }
+  }
+}
