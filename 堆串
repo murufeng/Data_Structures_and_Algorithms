@@ -1,0 +1,118 @@
+#include <cstdio>  
+#include <malloc.h>  
+#include <math.h>  
+#include <string.h>  
+#include <cstdlib>  
+#include <iostream>  
+  
+using namespace std;  
+typedef struct HString//定义字符串结构  
+{  
+    char *ch;  
+    int length;  
+}HString;  
+  
+int StrAssign(HString *T,char *chars)//字符串赋值  
+{  
+    int i,j;  
+    if(T->ch)  
+        free(T->ch);  
+    i=strlen(chars);  
+    if(!i)  
+    {  
+        T->ch=NULL;  
+        T->length=0;  
+  
+    }  
+    else  
+        T->ch=(char*)malloc(i*sizeof(char));  
+        if(!T->ch)//分配空间失败  
+            exit(OVERFLOW);  
+        for(j=0;j<i;j++)  
+            T->ch[j]=chars[j];  
+        T->length=i;  
+  
+    return 1;  
+}  
+  
+int Length(HString T)//求字符串的长度  
+{  
+      
+    return T.length;  
+}  
+  
+  
+  
+  
+  
+void InitString(HString *T)//初始化一个字符串  
+{  
+    T->length=0;  
+    T->ch=NULL;  
+}  
+int StrCopy(HString *T,HString t)//字符串复制  
+{  
+    int i;  
+    if(T->ch)  
+            free(T->ch);  
+    T->ch=(char*)malloc((t.length)*sizeof(char));  
+    if(!T->ch)  
+        exit(OVERFLOW);  
+    for(i=0;i<t.length;i++)  
+        T->ch[i]=t.ch[i];  
+    T->length=t.length;  
+    return 1;  
+  
+}  
+void StrCat(HString *s,HString t,HString r)//字符串连接  
+{  
+    int i;  
+    if(s->ch)  
+        free(s->ch);  
+    s->length=t.length+r.length;  
+    s->ch=(char *)malloc(s->length*sizeof(char));  
+    if(!s->ch)  
+        exit(OVERFLOW);  
+    for(i=0;i<t.length;i++)  
+        s->ch[i]=t.ch[i];  
+    for(i=0;i<r.length;i++)  
+        s->ch[t.length+i]=r.ch[i];  
+  
+}  
+int SubString(HString *Sub,HString t,int pos,int len)//求子串  
+{//sub返回串s中第pos  个字符起长度为len的字符串；  
+    int i;  
+    if(pos<1||pos>t.length||len<0||len>t.length-pos+1)  
+        exit(OVERFLOW);  
+    if(Sub->ch)  
+        free(Sub->ch);  
+    if(!len)  
+    {  
+        Sub->ch=NULL;  
+        Sub->length=0;  
+    }  
+    else  
+    {  
+        Sub->ch=(char *)malloc(len*sizeof(char));  
+        //if(!Sub->ch)  
+            //exit(OVERFLOW);  
+        for(i=0;i<=len-1;i++)  
+        {  
+            Sub->ch[i]=t.ch[pos-1+i];  
+        }  
+            Sub->length=len;  
+  
+          
+    }  
+  
+    return 0;  
+  
+}  
+int StrComp(HString t,HString r)  
+{//串比较  
+    if(t.length>r.length)  
+        return 1;  
+    else  
+        return 0;  
+  
+} 
