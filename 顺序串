@@ -1,0 +1,124 @@
+#include<stdio.h>
+#define maxsize 100
+typedef struct 
+{
+	int length;
+	char data[maxsize];
+}SqString;
+void Assign (SqString &S,char str[])   //串赋值
+{
+	int i=0;
+	while (str[i]!=0)
+	{
+		S.data[i]=str[i];
+		i++;
+	}
+	S.length=i;
+}
+void strcopy(SqString &S,SqString t)   //串复制
+{
+	int i;
+	for (i=0;i<t.length;i++)
+	{
+		S.data[i]=t.data[i];
+	}
+	S.length=t.length;
+}
+int strlength(SqString S)    //求串长
+{
+         return S.length;
+}
+int Strcompare(SqString t,SqString r)   //串比较  
+{ 
+    if(t.length>r.length)  
+        return t.length;
+    else  
+        return r.length;
+ 
+} 
+SqString conact(SqString s1,SqString s2)   //串连接
+{
+	int i,j;
+	SqString t;
+	if(s1.length+s2.length<=maxsize)
+	{
+		for(i=0;i<s1.length;i++)
+			t.data[i]=s1.data[i];
+		for(j=0;j<s2.length;j++)
+			t.data[s1.length+j]=s2.data[j];
+		t.length=s1.length+s2.length;
+	}
+	else if(s1.length<maxsize)
+	{
+		for (i=0;i<s1.length;i++)
+			t.data[i]=s1.data[i];
+		for(j=0;j<maxsize-s1.length;j++)
+			t.data[s1.length+j]=s2.data[j];
+		t.length=maxsize;
+	}
+	else
+	{
+		for(i=0;i<maxsize;i++)
+			t.data[i]=s1.data[i];
+	}
+	return t;
+}
+SqString SubStr(SqString s,int i,int j)   //求子串
+{
+	SqString str;
+	int k;
+	str.length=0;
+	if(i<=0||i>s.length||j<0||i+j-1>s.length)
+		return str;
+	else
+	{
+		for (k=i-1;k<i+j-1;k++)
+			str.data[k-i+1]=s.data[k];
+		str.length=j;
+	}
+	return str;
+}
+void  Display(SqString s)
+{
+	int i;
+	for (i=0;i<s.length;i++)
+		printf("%c",s.data[i]);
+	printf("\n");
+}
+int BFIndex(SqString S,SqString t,int pos)   //BF算法，模式匹配 
+{
+	int i,j;
+	i=pos;
+	j=1;
+	while(i<=S.length && j<=t.length)
+	{
+		if(S.data[i]==t.data[i])
+		{
+			++i;
+			++j;
+		}
+		else 
+		{
+			i=i-j+2;j=1;
+		}
+	}
+		if(j>t.length)  return i-t.length;
+		else return 0;
+}
+void main()
+{
+	SqString S1,S2,t;
+	char c[10]="abcac";
+	char a[20]="ababcabcacbab";
+	char b[10]="456fffdd";
+	Assign(S1,a);
+	Display(S1);
+    printf("%d\n",strlength(S1));
+	Assign(S2,b);
+	Display(S2);
+	printf("%d\n",Strcompare(S1,S2));
+    Display(SubStr(S2,1,5));
+    Display(conact(S1,S2));
+	Assign(t,c);
+	printf("%d\n",BFIndex(S1,t,1));
+}
